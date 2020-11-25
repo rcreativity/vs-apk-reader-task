@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import axios from 'axios';
-import { Form, Input, Textarea } from './styled'
+import { Form, Input, Textarea, StatusMessage } from './styled'
 
 export default function FormSection() {
   const [values, setValues] = useState({
-    name: "Cool Man App",
-    description: "Cool Man App Description"
+    name: "",
+    description: ""
   });
   const [file, setFile] = useState("");
+  const [message, setMessage] = useState(true);
 
   const onSubmitForm = (e) => {
     e.preventDefault();
@@ -15,28 +16,33 @@ export default function FormSection() {
     const formData = new FormData();        
     formData.append('file', file);
 
-    const { name, description } = values;
-    if(name && description) {
-      console.log(values, file)
+    if(values.name && values.description && file) {
       axios.post('http://localhost:3000/apk', formData, {
         params: {
-          name,
-          description,
-          version: '4.0',
-          size: '6MB'
-        },
-        body: {
-          file
+          name: values.name,
+          description: values.description
         }
       })
       .then(function (response) {
         console.log(response);
+        setMessage({
+          status: true,
+          text: "APK file submitted successfully"
+        })
+        setValues({
+          name: '', description: ''
+        })
+        setFile('');
       })
       .catch(function (error) {
         console.log(error);
+        setMessage({
+          status: false,
+          text: "APK file not submitted successfully, Please retry"
+        })
       });
     }else{
-      console.log('Please fill the required fields');
+      alert('Please fill the required fields including file');
     }
   }
 
@@ -63,6 +69,7 @@ export default function FormSection() {
         <Input type="file" onChange={handleUpload} />
         <Input type="submit" className="submit" value="submit"/>
       </Form>
+      { message && <StatusMessage status={message.status}>{message.text}</StatusMessage> }
     </>
   )
 }

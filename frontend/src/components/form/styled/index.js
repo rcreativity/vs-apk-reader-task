@@ -28,4 +28,8 @@ const Textarea = styled.textarea`
   margin: 10px;
 `
 
-export { Form, Input, Textarea};
+const StatusMessage = styled.h3`
+  color: ${props => props.status ? "green" : "red"};
+`
+
+export { Form, Input, Textarea, StatusMessage};

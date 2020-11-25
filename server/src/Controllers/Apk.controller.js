@@ -37,23 +37,53 @@ module.exports = {
   },
 
   createNewApk: async (req, res, next) => {
-    // console.log(req.body, req.files);
+    // post APK file data
+
     if (!req.files) {
         return res.status(500).send({ msg: "file is not found" })
     }
 
+    // reading APK file
     const myFile = req.files.file;
     myFile.mv(`${__dirname}/public/${myFile.name}`, function (err) {
         if (err) {
             console.log(err)
             return res.status(500).send({ msg: "Error occured" });
         }
+
         // returing the response with file path and name
         ApkReader.open(`${__dirname}/public/${myFile.name}`)
         .then(reader => reader.readManifest())
         .then(manifest => {
-          getFilesizeInBytes(`${__dirname}/public/${myFile.name}`)
-          console.log(util.inspect(manifest, { depth: null }))
+          let ApkFileSize = getFilesizeInBytes(`${__dirname}/public/${myFile.name}`)
+          let manifestFileVersionCode = util.inspect(manifest.versionCode, { depth: null });
+
+          let ApkFileSizeToString = ApkFileSize ? `${ApkFileSize.toString()}MB` : '0MB';
+          let manifestFileVersionCodeToString = manifestFileVersionCode? manifestFileVersionCode.toString() : '1'
+          console.log(req.query);
+          console.log("versionCode", typeof manifestFileVersionCodeToString)
+          console.log("ApkFileSize", typeof ApkFileSizeToString)
+
+          const params = {
+            name: req.query.name,
+            description: req.query.description,
+            version: manifestFileVersionCodeToString,
+            size: ApkFileSizeToString
+          }
+
+          try {
+            const apk = new Apk(params);
+            const result = apk.save();
+            res.send(result);
+          } catch (err) {
+            console.log(error.message);
+            if (error.name === 'ValidationError') {
+              next(createError(422, error.message));
+              return;
+            }
+            next(error);
+          }
+          
         })
 
         return res.send({name: myFile.name, path: `/${myFile.name}`});
@@ -63,7 +93,7 @@ module.exports = {
 
 
     
-     // post APK file data
+     
     // try {
     //   const apk = new Apk(req.query);
     //   const result = await apk.save();
