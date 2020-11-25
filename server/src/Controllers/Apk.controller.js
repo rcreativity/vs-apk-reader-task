@@ -18,15 +18,6 @@ function getFilesizeInBytes(filename) {
 module.exports = {
 
   getAllApks: async (req, res, next) => {
-    // code to read APK file
-
-    // ApkReader.open('/Users/ravikumar/Documents/task/vs-apk-reader/server/src/demo/test.apk')
-    // .then(reader => reader.readManifest())
-    // .then(manifest => {
-    //   getFilesizeInBytes('/Users/ravikumar/Documents/task/vs-apk-reader/server/src/demo/test.apk')
-    //   console.log(util.inspect(manifest, { depth: null }))
-    // })
-
     // gett all APK the data
     try {
       const results = await Apk.find({}, { __v: 0 });
@@ -38,7 +29,6 @@ module.exports = {
 
   createNewApk: async (req, res, next) => {
     // post APK file data
-
     if (!req.files) {
         return res.status(500).send({ msg: "file is not found" })
     }
@@ -90,24 +80,6 @@ module.exports = {
 
         return res.send({name: myFile.name, path: `/${myFile.name}`});
     });
-
-      
-
-
-    
-     
-    // try {
-    //   const apk = new Apk(req.query);
-    //   const result = await apk.save();
-    //   res.send(result);
-    // } catch (err) {
-    //   console.log(error.message);
-    //   if (error.name === 'ValidationError') {
-    //     next(createError(422, error.message));
-    //     return;
-    //   }
-    //   next(error);
-    // }
   },
 
 }
