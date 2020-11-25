@@ -40,6 +40,7 @@ export default function ShowAllApk() {
     <div>
       { loading && <h1>Loading</h1> }
       { error && !loading && <h1>Something went wrong, Please try again</h1> }
+      { data.length === 0 && !loading && <h2>No Data</h2>}
       { data.length > 0 && (
         <>
           <h2>All APK submitted files Data</h2>

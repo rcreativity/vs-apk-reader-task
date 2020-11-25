@@ -58,11 +58,13 @@ module.exports = {
           let ApkFileSize = getFilesizeInBytes(`${__dirname}/public/${myFile.name}`)
           let manifestFileVersionCode = util.inspect(manifest.versionCode, { depth: null });
 
+
           let ApkFileSizeToString = ApkFileSize ? `${ApkFileSize.toString()}MB` : '0MB';
-          let manifestFileVersionCodeToString = manifestFileVersionCode? manifestFileVersionCode.toString() : '1'
+          let manifestFileVersionCodeToString = manifestFileVersionCode !== 'undefined' ? manifestFileVersionCode.toString() : '1'
           console.log(req.query);
           console.log("versionCode", typeof manifestFileVersionCodeToString)
           console.log("ApkFileSize", typeof ApkFileSizeToString)
+          console.log("manifestFileVersionCode", manifestFileVersionCodeToString)
 
           const params = {
             name: req.query.name,
