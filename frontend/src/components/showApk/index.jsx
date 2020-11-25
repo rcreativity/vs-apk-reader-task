@@ -38,7 +38,7 @@ export default function ShowAllApk() {
   return (
     <div>
       { loading && <h1>Loading</h1> }
-      { error && !loading && <h1>error</h1> }
+      { error && !loading && <h1>Something went wrong, Please try again</h1> }
       { data.length > 0 && (
         JSON.stringify(data, 4)
       ) }

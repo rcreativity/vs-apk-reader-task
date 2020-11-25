@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import HeaderSection from './components/nav'
-import Form from './components/form'
+import FormSection from './components/form'
 import ShowAllApk from './components/showApk'
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
         <div className="container">
           <Switch>
             <Route exact path="/">
-              <Form />
+              <FormSection />
             </Route>
             <Route exact path="/show-all">
               <ShowAllApk />
