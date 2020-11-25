@@ -37,19 +37,45 @@ module.exports = {
   },
 
   createNewApk: async (req, res, next) => {
-     // post APK file data
-    try {
-      const apk = new Apk(req.query);
-      const result = await apk.save();
-      res.send(result);
-    } catch (err) {
-      console.log(error.message);
-      if (error.name === 'ValidationError') {
-        next(createError(422, error.message));
-        return;
-      }
-      next(error);
+    // console.log(req.body, req.files);
+    if (!req.files) {
+        return res.status(500).send({ msg: "file is not found" })
     }
+
+    const myFile = req.files.file;
+    myFile.mv(`${__dirname}/public/${myFile.name}`, function (err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).send({ msg: "Error occured" });
+        }
+        // returing the response with file path and name
+        ApkReader.open(`${__dirname}/public/${myFile.name}`)
+        .then(reader => reader.readManifest())
+        .then(manifest => {
+          getFilesizeInBytes(`${__dirname}/public/${myFile.name}`)
+          console.log(util.inspect(manifest, { depth: null }))
+        })
+
+        return res.send({name: myFile.name, path: `/${myFile.name}`});
+    });
+
+      
+
+
+    
+     // post APK file data
+    // try {
+    //   const apk = new Apk(req.query);
+    //   const result = await apk.save();
+    //   res.send(result);
+    // } catch (err) {
+    //   console.log(error.message);
+    //   if (error.name === 'ValidationError') {
+    //     next(createError(422, error.message));
+    //     return;
+    //   }
+    //   next(error);
+    // }
   },
 
 }

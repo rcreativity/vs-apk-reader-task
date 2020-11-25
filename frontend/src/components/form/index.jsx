@@ -7,17 +7,26 @@ export default function FormSection() {
     name: "Cool Man App",
     description: "Cool Man App Description"
   });
+  const [file, setFile] = useState("");
 
   const onSubmitForm = (e) => {
     e.preventDefault();
+
+    const formData = new FormData();        
+    formData.append('file', file);
+
     const { name, description } = values;
     if(name && description) {
-      axios.post('http://localhost:3000/apk', null, {
+      console.log(values, file)
+      axios.post('http://localhost:3000/apk', formData, {
         params: {
           name,
           description,
           version: '4.0',
           size: '6MB'
+        },
+        body: {
+          file
         }
       })
       .then(function (response) {
@@ -39,6 +48,10 @@ export default function FormSection() {
     });
   };
 
+  const handleUpload = event => {
+    setFile(event.target.files[0]);
+  }
+
   const { name, description } = values;
   
   return (
@@ -47,7 +60,7 @@ export default function FormSection() {
       <Form onSubmit={onSubmitForm}>
         <Input type="text" placeholder="name" value={name} name="name" onChange={handleChange} />
         <Textarea placeholder="description" value={description} name="description" rows="4" cols="50" onChange={handleChange} />
-        <Input type="file"/>
+        <Input type="file" onChange={handleUpload} />
         <Input type="submit" className="submit" value="submit"/>
       </Form>
     </>

@@ -2,10 +2,13 @@ const express = require('express')
 const mongoose = require('mongoose');
 const createError = require('http-errors');
 const dotenv = require('dotenv').config();
+const fileUpload = require('express-fileupload');
 
 const app = express()
 
+app.use(express.static('public'));
 app.use(express.json());
+app.use(fileUpload());
 
 // Add headers
 app.use(function (req, res, next) {
